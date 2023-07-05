@@ -11,7 +11,12 @@ import com.atguigu.crud.dao.SalaryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -42,6 +47,7 @@ public class SalaryService {
         if (salaries != null) {
             for (Salary salary : salaries) {
                 SalaryDto salaryDto = new SalaryDto();
+                salaryDto.setId(salary.getId());
                 salaryDto.setJsalary(salary.getJsalary());
                 salaryDto.setJbonus(salary.getJbonus());
                 salaryDto.setIsgrant(salary.getIsgrant());
@@ -49,6 +55,11 @@ public class SalaryService {
                 salaryDto.setEmpName(employee.getEmpName());
                 Department department = departmentMapper.selectByPrimaryKey(salary.getDeptId());
                 salaryDto.setDeptName(department.getDeptName());
+                Date grantdate = salary.getGrantdate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                // 使用SimpleDateFormat的format()方法将Date对象转换为字符串
+                String dateString = sdf.format(grantdate);
+                salaryDto.setGrantdate(dateString);
                 salaryDtos.add(salaryDto);
             }
             return salaryDtos;
@@ -82,7 +93,15 @@ public class SalaryService {
     /**
      * 修改薪资
      */
-    public void updateSalary(Salary salary) {
+    public void updateSalary(Integer id) {
+        Salary salary = salaryMapper.selectByPrimaryKey(id);
+        salary.setIsgrant("是");
+        // 获取当前时间
+        LocalDateTime currentTime = LocalDateTime.now();
+        // 将LocalDateTime对象转换为java.util.Date对象
+        Date grantDate = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
+        // 将转换后的时间注入到salary对象的grantdate属性中
+        salary.setGrantdate(grantDate);
         salaryMapper.updateByPrimaryKeySelective(salary);
     }
 

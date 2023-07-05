@@ -56,13 +56,13 @@ public class SalaryController {
 
     /**
      * 根据id修改薪资
-     * @param salary
+     * @param
      * @return
      */
-    @RequestMapping(value = "/salary{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/salary/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public Msg updateSalary(@RequestBody Salary salary) {
-        salaryService.updateSalary(salary);
+    public Msg updateSalary(@PathVariable Integer id) {
+        salaryService.updateSalary(id);
         return Msg.success();
     }
 

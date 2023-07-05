@@ -26,5 +26,5 @@ public class SalaryDto {
 
     private String isgrant;
 
-    private Date grantdate;
+    private String grantdate;
 }
